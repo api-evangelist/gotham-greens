@@ -1,0 +1,410 @@
+openapi: 3.1.0
+info:
+  title: Gotham Greens Discovery API
+  version: wp/v2
+  summary: Public site, content-type, taxonomy and status metadata.
+  description: >-
+    The self-describing surface of the gothamgreens.com WordPress REST API — the root index that
+    enumerates every namespace and route with its methods and argument schemas, plus the
+    content-type, taxonomy and post-status registries. This is what makes the whole site content
+    surface machine-discoverable. Verified live on 2026-08-01: the root index advertises 406
+    routes across 17 namespaces, of which the operations documented across this repo's specs are
+    the ones readable without credentials.
+  contact:
+    name: Gotham Greens
+    url: https://www.gothamgreens.com/contact/
+  license:
+    name: Site content — all rights reserved, see Terms of Use
+    url: https://www.gothamgreens.com/terms-of-use/
+  x-apis-io-provenance:
+    method: derived
+    source: https://www.gothamgreens.com/wp-json/
+    derived_on: '2026-08-01'
+    note: >-
+      Routes enumerated from the live wp-json discovery document (406 routes across 17
+      namespaces); each operation below was probed anonymously and returned HTTP 200. Schemas
+      reflect the fields observed in live responses on 2026-08-01. No fabricated operations.
+servers:
+- url: https://www.gothamgreens.com/wp-json
+  description: Production
+tags:
+- name: Discovery
+  description: Route index, content types, taxonomies and post statuses.
+paths:
+  /:
+    get:
+      tags:
+      - Discovery
+      operationId: getRootIndex
+      summary: Get the API root index
+      description: >-
+        Returns the site's REST index — name, description, home and gmt_offset, the list of
+        registered namespaces, the full route table with per-route methods and argument schemas,
+        the authentication methods advertised, and site link relations.
+      responses:
+        '200':
+          description: The REST root index.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RootIndex'
+  /wp/v2:
+    get:
+      tags:
+      - Discovery
+      operationId: getNamespaceIndex
+      summary: Get the wp/v2 namespace index
+      description: Returns the route table scoped to the `wp/v2` namespace.
+      responses:
+        '200':
+          description: The namespace index.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /wp/v2/types:
+    get:
+      tags:
+      - Discovery
+      operationId: listTypes
+      summary: List registered content types
+      description: >-
+        Returns every registered post type keyed by slug. Verified live: post, page, attachment,
+        nav_menu_item, wp_block, wp_template, wp_template_part, wp_global_styles, wp_navigation,
+        wp_font_family, wp_font_face. Gotham Greens registers no custom public post types.
+      responses:
+        '200':
+          description: The content-type registry.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/ContentType'
+  /wp/v2/types/{type}:
+    get:
+      tags:
+      - Discovery
+      operationId: getType
+      summary: Get a content type
+      description: Returns a single registered post type by slug.
+      parameters:
+      - name: type
+        in: path
+        required: true
+        description: Slug of the registered post type, e.g. `post`.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The requested content type.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentType'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/taxonomies:
+    get:
+      tags:
+      - Discovery
+      operationId: listTaxonomies
+      summary: List registered taxonomies
+      description: >-
+        Returns every registered taxonomy keyed by slug. Verified live: category, post_tag,
+        nav_menu, wp_pattern_category.
+      responses:
+        '200':
+          description: The taxonomy registry.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/Taxonomy'
+  /wp/v2/taxonomies/{taxonomy}:
+    get:
+      tags:
+      - Discovery
+      operationId: getTaxonomy
+      summary: Get a taxonomy
+      description: Returns a single registered taxonomy by slug.
+      parameters:
+      - name: taxonomy
+        in: path
+        required: true
+        description: Slug of the taxonomy, e.g. `category`.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The requested taxonomy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Taxonomy'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/statuses:
+    get:
+      tags:
+      - Discovery
+      operationId: listStatuses
+      summary: List post statuses
+      description: >-
+        Returns the publicly visible post statuses. Verified live: `publish` and `acf-disabled`.
+      responses:
+        '200':
+          description: The post-status registry.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      description: Unique numeric identifier for the object.
+      schema:
+        type: integer
+    page:
+      name: page
+      in: query
+      description: Current page of the collection. Defaults to 1.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    perPage:
+      name: per_page
+      in: query
+      description: >-
+        Maximum number of items to be returned in the result set. Verified live: values outside
+        1-100 return HTTP 400 `rest_invalid_param`.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      description: Order sort attribute ascending or descending.
+      schema:
+        type: string
+        enum: [asc, desc]
+    orderby:
+      name: orderby
+      in: query
+      description: Sort collection by object attribute.
+      schema:
+        type: string
+    context:
+      name: context
+      in: query
+      description: >-
+        Scope under which the request is made; determines fields present in the response. Only
+        `view` and `embed` are available anonymously.
+      schema:
+        type: string
+        enum: [view, embed]
+        default: view
+  headers:
+    XWPTotal:
+      description: Total number of items in the collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages in the collection at the current per_page.
+      schema:
+        type: integer
+    LinkPagination:
+      description: RFC 8288 Link header carrying `next` and `prev` pagination relations.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested object does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_no_route
+            message: No route was found matching the URL and request method.
+            data:
+              status: 404
+    InvalidParam:
+      description: One or more query parameters failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+    Unauthorized:
+      description: >-
+        The route exists but is not readable anonymously. Verified live on the users, settings,
+        themes, plugins, menus, block-types and revisions routes.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_forbidden
+            message: Sorry, you are not allowed to do that.
+            data:
+              status: 401
+  schemas:
+    RenderedText:
+      type: object
+      description: WordPress rendered-text object.
+      properties:
+        rendered:
+          type: string
+      required: [rendered]
+    Error:
+      type: object
+      description: >-
+        The WordPress REST error envelope, verified live. Note this is NOT RFC 9457
+        application/problem+json — it is served as application/json with a WordPress-specific shape.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              additionalProperties: true
+          required: [status]
+      required: [code, message, data]
+    RootIndex:
+      type: object
+      description: The WordPress REST API root index document.
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+          format: uri
+        home:
+          type: string
+          format: uri
+        gmt_offset:
+          type: [number, string]
+        timezone_string:
+          type: string
+        namespaces:
+          type: array
+          items:
+            type: string
+        authentication:
+          description: >-
+            Authentication methods advertised by the site. Observed live as an empty array — the
+            site advertises no additional authentication scheme beyond WordPress core cookie
+            authentication.
+          oneOf:
+          - type: array
+          - type: object
+            additionalProperties: true
+        routes:
+          type: object
+          additionalProperties: true
+          description: Route table keyed by route pattern, each with methods, endpoints and args.
+        _links:
+          type: object
+          additionalProperties: true
+      required: [name, url, home, namespaces, routes]
+    ContentType:
+      type: object
+      description: A registered WordPress post type.
+      properties:
+        description:
+          type: string
+        hierarchical:
+          type: boolean
+        has_archive:
+          type: [boolean, string]
+        name:
+          type: string
+        slug:
+          type: string
+        icon:
+          type: [string, 'null']
+        taxonomies:
+          type: array
+          items:
+            type: string
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        supports:
+          type: object
+          additionalProperties: true
+        visibility:
+          type: object
+          additionalProperties: true
+        labels:
+          type: object
+          additionalProperties: true
+        _links:
+          type: object
+          additionalProperties: true
+      required: [name, slug, rest_base]
+    Taxonomy:
+      type: object
+      description: A registered WordPress taxonomy.
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        types:
+          type: array
+          items:
+            type: string
+        hierarchical:
+          type: boolean
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        visibility:
+          type: object
+          additionalProperties: true
+        labels:
+          type: object
+          additionalProperties: true
+        _links:
+          type: object
+          additionalProperties: true
+      required: [name, slug, rest_base]

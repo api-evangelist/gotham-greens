@@ -1,0 +1,48 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Gotham Greens Search API
+  version: 1.0.0
+extends: openapi/gotham-greens-search-api-openapi.yml
+x-apis-io-provenance:
+  method: generated
+  generated: '2026-08-01'
+  source: openapi/gotham-greens-search-api-openapi.yml
+  note: >-
+    Captures the API Evangelist enrichment layer applied on top of the derived contract for the
+    Gotham Greens WordPress REST surface. The underlying openapi/ document is itself derived from
+    the live route index at https://www.gothamgreens.com/wp-json/; this overlay records our
+    catalog metadata and consumption guidance separately so the derived contract stays clean.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: gotham-greens
+    x-apievangelist-provider-name: Gotham Greens
+    x-apievangelist-industry: Controlled Environment Agriculture
+    x-apievangelist-surface-class: incidental-cms
+    x-apievangelist-note: >-
+      Gotham Greens is a fresh-produce and CPG company with no developer program. This is the
+      WordPress content API behind its marketing site, publicly readable but entirely unmanaged
+      by the provider — no versioning policy, no deprecation policy, no status page, no support
+      channel for API consumers.
+- target: $.info
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/gotham-greens-authentication.yml
+      conventions: conventions/gotham-greens-conventions.yml
+      errors: errors/gotham-greens-problem-types.yml
+      lifecycle: lifecycle/gotham-greens-lifecycle.yml
+      conformance: conformance/gotham-greens-conformance.yml
+      data_model: data-model/gotham-greens-data-model.yml
+      well_known: well-known/gotham-greens-well-known.yml
+- target: $.tags[?(@.name=='Search')]
+  update:
+    x-apievangelist-tag-summary: Cross-content site search.
+- target: $.info
+  update:
+    x-apievangelist-consumption-guidance: >-
+      Authentication: none required for any documented operation. Pagination: page/per_page with
+      X-WP-Total, X-WP-TotalPages and an RFC 8288 Link header; per_page is capped at 100.
+      Caching: responses carry Cache-Control max-age=600 — poll no faster. Rate limits: none
+      signalled; robots.txt requests a 10-second crawl delay, so self-throttle. Errors: the
+      WordPress {code, message, data.status} envelope, not RFC 9457. Trim responses with
+      _fields and inline relations with _embed.

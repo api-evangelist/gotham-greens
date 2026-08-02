@@ -1,0 +1,362 @@
+openapi: 3.1.0
+info:
+  title: Gotham Greens Taxonomy API
+  version: wp/v2
+  summary: Public read surface of the Journal categories and tags.
+  description: >-
+    Categories and tags that classify the Gotham Greens Journal, exposed anonymously through the
+    WordPress core REST API. Two taxonomies are attached to the public `post` type: `category`
+    (e.g. Recipes, For the Family, General) and `post_tag`. Derived from the live route index and
+    verified with anonymous probes returning HTTP 200.
+  contact:
+    name: Gotham Greens
+    url: https://www.gothamgreens.com/contact/
+  license:
+    name: Site content — all rights reserved, see Terms of Use
+    url: https://www.gothamgreens.com/terms-of-use/
+  x-apis-io-provenance:
+    method: derived
+    source: https://www.gothamgreens.com/wp-json/
+    derived_on: '2026-08-01'
+    note: >-
+      Routes enumerated from the live wp-json discovery document (406 routes across 17
+      namespaces); each operation below was probed anonymously and returned HTTP 200. Schemas
+      reflect the fields observed in live responses on 2026-08-01. No fabricated operations.
+servers:
+- url: https://www.gothamgreens.com/wp-json
+  description: Production
+tags:
+- name: Taxonomy
+  description: Journal categories and tags.
+paths:
+  /wp/v2/categories:
+    get:
+      tags:
+      - Taxonomy
+      operationId: listCategories
+      summary: List categories
+      description: Returns a paginated collection of Journal categories.
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/search'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/orderby'
+      - $ref: '#/components/parameters/context'
+      - name: slug
+        in: query
+        description: Limit results to categories with one of the given slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: parent
+        in: query
+        description: Limit results to categories with the given parent term ID.
+        schema:
+          type: integer
+      - name: post
+        in: query
+        description: Limit results to categories assigned to a specific post ID.
+        schema:
+          type: integer
+      - name: hide_empty
+        in: query
+        description: Whether to hide categories with no assigned posts.
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: A page of categories.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+            Link:
+              $ref: '#/components/headers/LinkPagination'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        '400':
+          $ref: '#/components/responses/InvalidParam'
+  /wp/v2/categories/{id}:
+    get:
+      tags:
+      - Taxonomy
+      operationId: getCategory
+      summary: Get a category
+      description: Returns a single category term by its numeric term ID.
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/context'
+      responses:
+        '200':
+          description: The requested category.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/tags:
+    get:
+      tags:
+      - Taxonomy
+      operationId: listTags
+      summary: List tags
+      description: Returns a paginated collection of Journal tags.
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/search'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/orderby'
+      - $ref: '#/components/parameters/context'
+      - name: slug
+        in: query
+        description: Limit results to tags with one of the given slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: post
+        in: query
+        description: Limit results to tags assigned to a specific post ID.
+        schema:
+          type: integer
+      - name: hide_empty
+        in: query
+        description: Whether to hide tags with no assigned posts.
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: A page of tags.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+            Link:
+              $ref: '#/components/headers/LinkPagination'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+        '400':
+          $ref: '#/components/responses/InvalidParam'
+  /wp/v2/tags/{id}:
+    get:
+      tags:
+      - Taxonomy
+      operationId: getTag
+      summary: Get a tag
+      description: Returns a single tag term by its numeric term ID.
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/context'
+      responses:
+        '200':
+          description: The requested tag.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      description: Unique numeric identifier for the object.
+      schema:
+        type: integer
+    page:
+      name: page
+      in: query
+      description: Current page of the collection. Defaults to 1.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    perPage:
+      name: per_page
+      in: query
+      description: >-
+        Maximum number of items to be returned in the result set. Verified live: values outside
+        1-100 return HTTP 400 `rest_invalid_param`.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      description: Order sort attribute ascending or descending.
+      schema:
+        type: string
+        enum: [asc, desc]
+    orderby:
+      name: orderby
+      in: query
+      description: Sort collection by object attribute.
+      schema:
+        type: string
+    context:
+      name: context
+      in: query
+      description: >-
+        Scope under which the request is made; determines fields present in the response. Only
+        `view` and `embed` are available anonymously.
+      schema:
+        type: string
+        enum: [view, embed]
+        default: view
+  headers:
+    XWPTotal:
+      description: Total number of items in the collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages in the collection at the current per_page.
+      schema:
+        type: integer
+    LinkPagination:
+      description: RFC 8288 Link header carrying `next` and `prev` pagination relations.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested object does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_no_route
+            message: No route was found matching the URL and request method.
+            data:
+              status: 404
+    InvalidParam:
+      description: One or more query parameters failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+    Unauthorized:
+      description: >-
+        The route exists but is not readable anonymously. Verified live on the users, settings,
+        themes, plugins, menus, block-types and revisions routes.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_forbidden
+            message: Sorry, you are not allowed to do that.
+            data:
+              status: 401
+  schemas:
+    RenderedText:
+      type: object
+      description: WordPress rendered-text object.
+      properties:
+        rendered:
+          type: string
+      required: [rendered]
+    Error:
+      type: object
+      description: >-
+        The WordPress REST error envelope, verified live. Note this is NOT RFC 9457
+        application/problem+json — it is served as application/json with a WordPress-specific shape.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              additionalProperties: true
+          required: [status]
+      required: [code, message, data]
+    Term:
+      type: object
+      description: A WordPress taxonomy term as returned anonymously in `view` context.
+      properties:
+        id:
+          type: integer
+        count:
+          type: integer
+          description: Number of published objects assigned to this term.
+        description:
+          type: string
+        link:
+          type: string
+          format: uri
+        name:
+          type: string
+        slug:
+          type: string
+        taxonomy:
+          type: string
+        meta:
+          type: object
+          additionalProperties: true
+        yoast_head:
+          type: string
+        yoast_head_json:
+          type: object
+          additionalProperties: true
+        _links:
+          type: object
+          additionalProperties: true
+      required: [id, name, slug, taxonomy, link]
+    Category:
+      allOf:
+      - $ref: '#/components/schemas/Term'
+      - type: object
+        properties:
+          parent:
+            type: integer
+            description: Parent term ID; categories are hierarchical.
+          acf:
+            oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+    Tag:
+      allOf:
+      - $ref: '#/components/schemas/Term'
+      - type: object
+        description: Tags are non-hierarchical and carry no `parent`.

@@ -1,0 +1,124 @@
+generated: '2026-08-01'
+method: probed
+source: live anonymous requests to https://www.gothamgreens.com/wp-json/ (2026-08-01)
+summary: >-
+  Real request/response examples captured from the live Gotham Greens content API. Every payload
+  below is verbatim (trimmed for length where noted) — nothing is synthesised. These bind the
+  derived openapi/ specs to observed reality.
+examples:
+- name: list-journal-posts
+  operation: openapi/gotham-greens-posts-api-openapi.yml#listPosts
+  request:
+    method: GET
+    url: >-
+      https://www.gothamgreens.com/wp-json/wp/v2/posts?per_page=1&_fields=id,date,slug,link,title,excerpt,categories,tags,featured_media,author,type,status
+    headers: {}
+  response:
+    status: 200
+    headers:
+      content-type: application/json; charset=UTF-8
+      x-wp-total: '132'
+      x-wp-totalpages: '132'
+      cache-control: max-age=600, must-revalidate
+      x-robots-tag: noindex
+    body:
+    - id: 9709
+      date: '2026-06-23T19:37:09'
+      slug: 4-ingredients-dinners-done
+      status: publish
+      type: post
+      link: https://www.gothamgreens.com/journal/4-ingredients-dinners-done/
+      title:
+        rendered: 4 Ingredients, Dinner&#8217;s Done
+      excerpt:
+        rendered: <p>While our dairy-free dips are perfect for scooping, dipping, and&#8230;</p>
+        protected: false
+      author: 13
+      featured_media: 0
+      categories: [1, 8]
+      tags: []
+  note: >-
+    Demonstrates the `_fields` sparse-field parameter, which drops the multi-kilobyte yoast_head
+    string from each item. The `categories` array resolves against the taxonomy example below.
+- name: list-journal-categories
+  operation: openapi/gotham-greens-taxonomy-api-openapi.yml#listCategories
+  request:
+    method: GET
+    url: https://www.gothamgreens.com/wp-json/wp/v2/categories?per_page=100&_fields=id,name,slug,count,parent
+  response:
+    status: 200
+    body:
+    - {id: 1, name: General, slug: general, count: 75, parent: 0}
+    - {id: 8, name: Recipes, slug: recipes, count: 70, parent: 0}
+    - {id: 7, name: Featured, slug: featured, count: 55, parent: 0}
+    - {id: 9, name: Stories, slug: stories, count: 27, parent: 0}
+    - {id: 5, name: Sustainability, slug: sustainability, count: 12, parent: 0}
+    - {id: 10, name: Press, slug: press, count: 1, parent: 0}
+    - {id: 6, name: Technology, slug: technology, count: 1, parent: 0}
+    - {id: 1027, name: Basil Recipes, slug: basil-recipes, count: 29, parent: 8}
+    - {id: 1026, name: For The Family, slug: for-the-family, count: 10, parent: 1}
+  note: >-
+    The complete live category set. Note the hierarchy — Basil Recipes (1027) is a child of
+    Recipes (8), For The Family (1026) a child of General (1). Counts are of published posts.
+- name: oembed-a-site-page
+  operation: openapi/gotham-greens-oembed-api-openapi.yml#getOembed
+  request:
+    method: GET
+    url: >-
+      https://www.gothamgreens.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.gothamgreens.com%2Four-story%2F
+  response:
+    status: 200
+    body:
+      version: '1.0'
+      provider_name: Gotham Greens
+      provider_url: https://www.gothamgreens.com
+      title: Our Story
+      type: rich
+      width: 600
+      height: 338
+      html: <blockquote class="wp-embedded-content" ...>...</blockquote><iframe ...></iframe>
+  note: >-
+    `html` is trimmed here — the live value is a full blockquote + sandboxed iframe + inline
+    resize script. The rest of the object is verbatim.
+- name: validation-error
+  operation: openapi/gotham-greens-posts-api-openapi.yml#listPosts
+  request:
+    method: GET
+    url: https://www.gothamgreens.com/wp-json/wp/v2/posts?per_page=999
+  response:
+    status: 400
+    body:
+      code: rest_invalid_param
+      message: 'Invalid parameter(s): per_page'
+      data:
+        status: 400
+        params:
+          per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+  note: The WordPress error envelope in full. See errors/gotham-greens-problem-types.yml.
+- name: not-found-error
+  operation: openapi/gotham-greens-posts-api-openapi.yml#getPost
+  request:
+    method: GET
+    url: https://www.gothamgreens.com/wp-json/wp/v2/posts/99999999
+  response:
+    status: 404
+    body:
+      code: rest_post_invalid_id
+      message: Invalid post ID.
+      data:
+        status: 404
+- name: gated-route
+  operation: null
+  request:
+    method: GET
+    url: https://www.gothamgreens.com/wp-json/wp/v2/users
+  response:
+    status: 401
+    body:
+      code: rest_user_cannot_view
+      message: Sorry, you are not allowed to list users.
+      data:
+        status: 401
+  note: >-
+    Included deliberately: it is the evidence that the public/private split on this surface was
+    tested rather than assumed. Post.author IDs are not anonymously resolvable.

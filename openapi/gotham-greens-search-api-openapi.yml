@@ -1,0 +1,244 @@
+openapi: 3.1.0
+info:
+  title: Gotham Greens Search API
+  version: wp/v2
+  summary: Public cross-content search over gothamgreens.com.
+  description: >-
+    The WordPress core search controller, exposed anonymously on gothamgreens.com. Returns
+    lightweight records (id, title, url, type, subtype) across Journal posts and site pages —
+    the same index that powers on-site search. Derived from the live route index and verified
+    with an anonymous probe returning HTTP 200.
+  contact:
+    name: Gotham Greens
+    url: https://www.gothamgreens.com/contact/
+  license:
+    name: Site content — all rights reserved, see Terms of Use
+    url: https://www.gothamgreens.com/terms-of-use/
+  x-apis-io-provenance:
+    method: derived
+    source: https://www.gothamgreens.com/wp-json/
+    derived_on: '2026-08-01'
+    note: >-
+      Routes enumerated from the live wp-json discovery document (406 routes across 17
+      namespaces); each operation below was probed anonymously and returned HTTP 200. Schemas
+      reflect the fields observed in live responses on 2026-08-01. No fabricated operations.
+servers:
+- url: https://www.gothamgreens.com/wp-json
+  description: Production
+tags:
+- name: Search
+  description: Cross-content site search.
+paths:
+  /wp/v2/search:
+    get:
+      tags:
+      - Search
+      operationId: searchContent
+      summary: Search site content
+      description: >-
+        Searches published posts and pages and returns lightweight result records. Total counts
+        are returned in the X-WP-Total and X-WP-TotalPages headers.
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - name: search
+        in: query
+        required: true
+        description: The search term.
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: Limit results to items of an object type.
+        schema:
+          type: string
+          enum: [post, term, post-format]
+          default: post
+      - name: subtype
+        in: query
+        description: Limit results to items of one or more object subtypes (post, page).
+        schema:
+          type: array
+          items:
+            type: string
+      - $ref: '#/components/parameters/context'
+      responses:
+        '200':
+          description: A page of search results.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+            Link:
+              $ref: '#/components/headers/LinkPagination'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchResult'
+        '400':
+          $ref: '#/components/responses/InvalidParam'
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      description: Unique numeric identifier for the object.
+      schema:
+        type: integer
+    page:
+      name: page
+      in: query
+      description: Current page of the collection. Defaults to 1.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    perPage:
+      name: per_page
+      in: query
+      description: >-
+        Maximum number of items to be returned in the result set. Verified live: values outside
+        1-100 return HTTP 400 `rest_invalid_param`.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      description: Order sort attribute ascending or descending.
+      schema:
+        type: string
+        enum: [asc, desc]
+    orderby:
+      name: orderby
+      in: query
+      description: Sort collection by object attribute.
+      schema:
+        type: string
+    context:
+      name: context
+      in: query
+      description: >-
+        Scope under which the request is made; determines fields present in the response. Only
+        `view` and `embed` are available anonymously.
+      schema:
+        type: string
+        enum: [view, embed]
+        default: view
+  headers:
+    XWPTotal:
+      description: Total number of items in the collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages in the collection at the current per_page.
+      schema:
+        type: integer
+    LinkPagination:
+      description: RFC 8288 Link header carrying `next` and `prev` pagination relations.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested object does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_no_route
+            message: No route was found matching the URL and request method.
+            data:
+              status: 404
+    InvalidParam:
+      description: One or more query parameters failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+    Unauthorized:
+      description: >-
+        The route exists but is not readable anonymously. Verified live on the users, settings,
+        themes, plugins, menus, block-types and revisions routes.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_forbidden
+            message: Sorry, you are not allowed to do that.
+            data:
+              status: 401
+  schemas:
+    RenderedText:
+      type: object
+      description: WordPress rendered-text object.
+      properties:
+        rendered:
+          type: string
+      required: [rendered]
+    Error:
+      type: object
+      description: >-
+        The WordPress REST error envelope, verified live. Note this is NOT RFC 9457
+        application/problem+json — it is served as application/json with a WordPress-specific shape.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              additionalProperties: true
+          required: [status]
+      required: [code, message, data]
+    SearchResult:
+      type: object
+      description: A lightweight search result record.
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          description: Plain-text title of the matched object.
+        url:
+          type: string
+          format: uri
+        type:
+          type: string
+          description: Object type, e.g. `post`.
+        subtype:
+          type: string
+          description: Object subtype, e.g. `post` or `page`.
+        _links:
+          type: object
+          additionalProperties: true
+      required: [id, title, url, type, subtype]

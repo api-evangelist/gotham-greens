@@ -1,0 +1,96 @@
+generated: '2026-08-01'
+method: derived
+status: candidate
+source: openapi/gotham-greens-*-openapi.yml
+summary: >-
+  Gotham Greens publishes NO hosted or remote MCP server. Searched the site, the /.well-known/
+  surface and the public registries on 2026-08-01 and found none; there is no mcp.gothamgreens.com
+  host and no MCP reference anywhere in the site. The tool list below is a CANDIDATE derived
+  mechanically from the twenty anonymously-readable OpenAPI operations in this repo — one tool per
+  operationId. It is a proposal for what an MCP server over this surface would expose, not
+  something Gotham Greens offers. Each tool's real input contract is the parameters block of its
+  backing operation in the referenced spec.
+search:
+  performed: '2026-08-01'
+  probed:
+  - target: https://mcp.gothamgreens.com
+    result: NXDOMAIN
+  - target: https://www.gothamgreens.com/.well-known/ai-plugin.json
+    result: 404
+  - target: https://www.gothamgreens.com/llms.txt
+    result: 404
+  - target: docs / site search for "MCP", "Model Context Protocol", "agent"
+    result: no reference found
+  outcome: none
+server:
+  name: gotham-greens
+  transport: http
+  url: null
+  published: false
+  note: >-
+    No server URL — nothing is published. A candidate server would front
+    https://www.gothamgreens.com/wp-json with no credential, since the surface is anonymous.
+auth:
+  required: false
+  note: All candidate tools are anonymous reads. No token, key or consent step is involved.
+tools:
+- name: list_journal_posts
+  description: List Gotham Greens Journal posts — recipes, produce guides and company news.
+  source_operation: openapi/gotham-greens-posts-api-openapi.yml#listPosts
+- name: get_journal_post
+  description: Get a single Journal post by its numeric ID.
+  source_operation: openapi/gotham-greens-posts-api-openapi.yml#getPost
+- name: list_pages
+  description: List the static marketing and legal pages of gothamgreens.com.
+  source_operation: openapi/gotham-greens-pages-api-openapi.yml#listPages
+- name: get_page
+  description: Get a single site page by its numeric ID.
+  source_operation: openapi/gotham-greens-pages-api-openapi.yml#getPage
+- name: list_media
+  description: List media library attachments — product, farm and recipe imagery.
+  source_operation: openapi/gotham-greens-media-api-openapi.yml#listMedia
+- name: get_media_item
+  description: Get a single media attachment, including its size variants and source URL.
+  source_operation: openapi/gotham-greens-media-api-openapi.yml#getMediaItem
+- name: list_categories
+  description: List Journal categories.
+  source_operation: openapi/gotham-greens-taxonomy-api-openapi.yml#listCategories
+- name: get_category
+  description: Get a single Journal category by term ID.
+  source_operation: openapi/gotham-greens-taxonomy-api-openapi.yml#getCategory
+- name: list_tags
+  description: List Journal tags.
+  source_operation: openapi/gotham-greens-taxonomy-api-openapi.yml#listTags
+- name: get_tag
+  description: Get a single Journal tag by term ID.
+  source_operation: openapi/gotham-greens-taxonomy-api-openapi.yml#getTag
+- name: search_content
+  description: Search across Journal posts and site pages, returning lightweight result records.
+  source_operation: openapi/gotham-greens-search-api-openapi.yml#searchContent
+- name: get_root_index
+  description: Get the REST root index — every namespace and route with its methods and args.
+  source_operation: openapi/gotham-greens-discovery-api-openapi.yml#getRootIndex
+- name: get_namespace_index
+  description: Get the route table scoped to the wp/v2 namespace.
+  source_operation: openapi/gotham-greens-discovery-api-openapi.yml#getNamespaceIndex
+- name: list_content_types
+  description: List registered content types and their rest_base values.
+  source_operation: openapi/gotham-greens-discovery-api-openapi.yml#listTypes
+- name: get_content_type
+  description: Get a single registered content type by slug.
+  source_operation: openapi/gotham-greens-discovery-api-openapi.yml#getType
+- name: list_taxonomies
+  description: List registered taxonomies and the types they apply to.
+  source_operation: openapi/gotham-greens-discovery-api-openapi.yml#listTaxonomies
+- name: get_taxonomy
+  description: Get a single registered taxonomy by slug.
+  source_operation: openapi/gotham-greens-discovery-api-openapi.yml#getTaxonomy
+- name: list_post_statuses
+  description: List the publicly visible post statuses.
+  source_operation: openapi/gotham-greens-discovery-api-openapi.yml#listStatuses
+- name: get_oembed
+  description: Get oEmbed 1.0 rich metadata for a gothamgreens.com URL.
+  source_operation: openapi/gotham-greens-oembed-api-openapi.yml#getOembed
+- name: get_seo_head
+  description: Get the Yoast SEO head metadata and JSON-LD schema graph for a gothamgreens.com URL.
+  source_operation: openapi/gotham-greens-seo-api-openapi.yml#getSeoHead

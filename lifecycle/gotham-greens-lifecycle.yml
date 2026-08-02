@@ -1,0 +1,81 @@
+generated: '2026-08-01'
+method: derived
+source: >-
+  live probes of https://www.gothamgreens.com/ and https://www.gothamgreens.com/wp-json/
+  (2026-08-01)
+summary: >-
+  Gotham Greens operates no API program, so it publishes no API versioning policy, no deprecation
+  policy, no SLA, no status page and no changelog. What versioning exists is inherited from the
+  WordPress platform and its plugins. Absence is recorded here as observed fact — no StatusPage or
+  Deprecation pointer is wired for this provider because neither page exists.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  namespaces:
+  - namespace: wp/v2
+    surface: WordPress core content API (posts, pages, media, taxonomy, search, discovery)
+  - namespace: oembed/1.0
+    surface: oEmbed provider endpoint
+  - namespace: yoast/v1
+    surface: Yoast SEO head endpoint (Yoast SEO Premium v28.1 observed)
+  owner: platform
+  detail: >-
+    The version segment is set by WordPress core and by each plugin, not by Gotham Greens. A
+    WordPress core upgrade or plugin change can alter this surface without any notice to callers,
+    which is the principal consumption risk here.
+  policy_url: null
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  detail: >-
+    No Sunset or Deprecation response header was observed (RFC 8594), and no deprecation policy
+    page exists on gothamgreens.com. No operation in this repo's openapi/ specs is marked
+    deprecated.
+deprecated_operations: []
+sla:
+  url: null
+  published: false
+  uptime_target: null
+status_page:
+  url: null
+  published: false
+  probed:
+  - url: https://status.gothamgreens.com
+    result: NXDOMAIN
+  detail: >-
+    No status page exists. Availability of this surface is the availability of the marketing site.
+changelog:
+  url: null
+  published: false
+  detail: >-
+    No API changelog. The company's Journal (https://www.gothamgreens.com/journal/) is editorial
+    content about food and farming, not release notes.
+support:
+  url: https://www.gothamgreens.com/contact/
+  faq: https://www.gothamgreens.com/faq/
+  detail: >-
+    General consumer contact and FAQ only. There is no developer support channel, forum, or
+    developer relations contact.
+stability:
+  assessment: unmanaged
+  detail: >-
+    This is an incidental API surface. It is public and stable in shape because WordPress core is,
+    but Gotham Greens makes no commitment about it, monitors no consumers, and would have no
+    mechanism to warn them of a breaking change. Consumers should pin to nothing, cache within the
+    600-second Cache-Control window observed, and tolerate the surface disappearing entirely.
+x-evidence:
+  fetched: '2026-08-01'
+  host: https://www.gothamgreens.com
+  pages_probed:
+    /accessibility/: 404
+    /sustainability/: 404
+    /impact/: 404
+    /faq/: 200
+    /contact/: 200
+  subdomains_probed:
+    status.gothamgreens.com: NXDOMAIN
+    api.gothamgreens.com: NXDOMAIN
+    developer.gothamgreens.com: NXDOMAIN
+    docs.gothamgreens.com: NXDOMAIN

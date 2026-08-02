@@ -1,10 +1,35 @@
 aid: gotham-greens
 name: Gotham Greens
-description: 'Gotham Greens is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Gotham Greens is an American fresh food and indoor farming company founded in 2009 by Viraj Puri
+  and Eric Haley in Brooklyn, New York, where it built one of the first commercial-scale rooftop
+  hydroponic greenhouses in the world. The company owns and operates a national network of
+  climate-controlled hydroponic greenhouses across the United States, growing pesticide-free leafy
+  greens, lettuces and herbs year-round using a fraction of the land and water of conventional
+  field agriculture, and delivering them to retail, restaurant and foodservice customers within
+  hours of harvest. Under its own brand it sells packaged salad greens, salad kits, fresh herbs,
+  salad dressings, dips, pestos and cooking sauces. Gotham Greens is a consumer packaged goods and
+  controlled-environment agriculture business rather than a software vendor, and publishes no
+  commercial or developer-facing product API. The only machine-readable interface it exposes is
+  the WordPress REST content API behind its corporate website at gothamgreens.com, captured here
+  for discovery purposes.
 url: https://raw.githubusercontent.com/api-evangelist/gotham-greens/refs/heads/main/apis.yml
+image: https://www.gothamgreens.com/wp-content/uploads/2019/10/android-chrome-256x256-200x200.png
+accessModel:
+  pricing: none
+  onboarding: none
+  trial: false
+  try_now: true
+  public: true
+  label: Public read-only content API, no signup
+  confidence: high
+  source:
+  - authentication
+  generated: '2026-08-01'
+  method: derived
 x-type: company
 x-source: harvest:secondary-market
+x-secondary-market-listing: https://forgeglobal.com/gotham-greens_stock/
 x-tier: stub
 x-tier-reason: harvest
 specificationVersion: '0.20'
@@ -12,12 +37,281 @@ created: '2026-08-01'
 modified: '2026-08-01'
 tags:
 - Company
-apis: []
+- Agriculture
+- Controlled Environment Agriculture
+- Hydroponics
+- Food
+- Consumer Packaged Goods
+- Fresh Produce
+- Sustainability
+- Urban Farming
+- Content
+apis:
+- aid: gotham-greens:gotham-greens-posts-api
+  name: Gotham Greens Journal Posts API
+  description: >-
+    Public, unauthenticated read access to the Gotham Greens Journal — recipes, company news and
+    seasonal articles — via the WordPress core REST API. Verified live at 132 published posts.
+  humanURL: https://www.gothamgreens.com/wp-json/
+  baseURL: https://www.gothamgreens.com/wp-json
+  tags:
+  - Posts
+  - Content
+  - Recipes
+  properties:
+  - type: OpenAPI
+    url: openapi/gotham-greens-posts-api-openapi.yml
+  - type: Authentication
+    url: authentication/gotham-greens-authentication.yml
+  - type: ErrorCatalog
+    url: errors/gotham-greens-problem-types.yml
+  - type: Conventions
+    url: conventions/gotham-greens-conventions.yml
+  - type: DataModel
+    url: data-model/gotham-greens-data-model.yml
+  - type: Conformance
+    url: conformance/gotham-greens-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/gotham-greens-lifecycle.yml
+  - type: Overlay
+    url: overlays/gotham-greens-posts-api-overlay.yaml
+- aid: gotham-greens:gotham-greens-pages-api
+  name: Gotham Greens Pages API
+  description: >-
+    Public, unauthenticated read access to the static marketing pages of gothamgreens.com (Our
+    Story, Our Farms, Our Products, Find Us, FAQ, Careers) via the WordPress core REST API.
+  humanURL: https://www.gothamgreens.com/wp-json/
+  baseURL: https://www.gothamgreens.com/wp-json
+  tags:
+  - Pages
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/gotham-greens-pages-api-openapi.yml
+  - type: Authentication
+    url: authentication/gotham-greens-authentication.yml
+  - type: ErrorCatalog
+    url: errors/gotham-greens-problem-types.yml
+  - type: Conventions
+    url: conventions/gotham-greens-conventions.yml
+  - type: DataModel
+    url: data-model/gotham-greens-data-model.yml
+  - type: Conformance
+    url: conformance/gotham-greens-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/gotham-greens-lifecycle.yml
+  - type: Overlay
+    url: overlays/gotham-greens-pages-api-overlay.yaml
+- aid: gotham-greens:gotham-greens-media-api
+  name: Gotham Greens Media API
+  description: >-
+    Public, unauthenticated read access to the media library behind gothamgreens.com — product
+    photography, farm imagery and recipe images with their generated size variants.
+  humanURL: https://www.gothamgreens.com/wp-json/
+  baseURL: https://www.gothamgreens.com/wp-json
+  tags:
+  - Media
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/gotham-greens-media-api-openapi.yml
+  - type: Authentication
+    url: authentication/gotham-greens-authentication.yml
+  - type: ErrorCatalog
+    url: errors/gotham-greens-problem-types.yml
+  - type: Conventions
+    url: conventions/gotham-greens-conventions.yml
+  - type: DataModel
+    url: data-model/gotham-greens-data-model.yml
+  - type: Conformance
+    url: conformance/gotham-greens-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/gotham-greens-lifecycle.yml
+  - type: Overlay
+    url: overlays/gotham-greens-media-api-overlay.yaml
+- aid: gotham-greens:gotham-greens-taxonomy-api
+  name: Gotham Greens Taxonomy API
+  description: >-
+    Public, unauthenticated read access to the Journal taxonomy — categories (Recipes, For the
+    Family, General) and tags — via the WordPress core REST API.
+  humanURL: https://www.gothamgreens.com/wp-json/
+  baseURL: https://www.gothamgreens.com/wp-json
+  tags:
+  - Taxonomy
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/gotham-greens-taxonomy-api-openapi.yml
+  - type: Authentication
+    url: authentication/gotham-greens-authentication.yml
+  - type: ErrorCatalog
+    url: errors/gotham-greens-problem-types.yml
+  - type: Conventions
+    url: conventions/gotham-greens-conventions.yml
+  - type: DataModel
+    url: data-model/gotham-greens-data-model.yml
+  - type: Conformance
+    url: conformance/gotham-greens-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/gotham-greens-lifecycle.yml
+  - type: Overlay
+    url: overlays/gotham-greens-taxonomy-api-overlay.yaml
+- aid: gotham-greens:gotham-greens-search-api
+  name: Gotham Greens Search API
+  description: >-
+    Public, unauthenticated cross-content search over posts and pages on gothamgreens.com,
+    returning lightweight id / title / url / subtype records.
+  humanURL: https://www.gothamgreens.com/wp-json/
+  baseURL: https://www.gothamgreens.com/wp-json
+  tags:
+  - Search
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/gotham-greens-search-api-openapi.yml
+  - type: Authentication
+    url: authentication/gotham-greens-authentication.yml
+  - type: ErrorCatalog
+    url: errors/gotham-greens-problem-types.yml
+  - type: Conventions
+    url: conventions/gotham-greens-conventions.yml
+  - type: Conformance
+    url: conformance/gotham-greens-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/gotham-greens-lifecycle.yml
+  - type: Overlay
+    url: overlays/gotham-greens-search-api-overlay.yaml
+- aid: gotham-greens:gotham-greens-discovery-api
+  name: Gotham Greens Discovery API
+  description: >-
+    Public, unauthenticated site, content-type, taxonomy and status metadata — the self-describing
+    route index that makes the whole surface machine-readable.
+  humanURL: https://www.gothamgreens.com/wp-json/
+  baseURL: https://www.gothamgreens.com/wp-json
+  tags:
+  - Discovery
+  - Metadata
+  properties:
+  - type: OpenAPI
+    url: openapi/gotham-greens-discovery-api-openapi.yml
+  - type: Authentication
+    url: authentication/gotham-greens-authentication.yml
+  - type: ErrorCatalog
+    url: errors/gotham-greens-problem-types.yml
+  - type: Conventions
+    url: conventions/gotham-greens-conventions.yml
+  - type: Conformance
+    url: conformance/gotham-greens-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/gotham-greens-lifecycle.yml
+  - type: Overlay
+    url: overlays/gotham-greens-discovery-api-overlay.yaml
+- aid: gotham-greens:gotham-greens-oembed-api
+  name: Gotham Greens oEmbed API
+  description: >-
+    Public oEmbed 1.0 provider endpoint for gothamgreens.com URLs, returning embeddable rich
+    metadata for Journal posts and site pages.
+  humanURL: https://www.gothamgreens.com/wp-json/
+  baseURL: https://www.gothamgreens.com/wp-json
+  tags:
+  - oEmbed
+  - Metadata
+  properties:
+  - type: OpenAPI
+    url: openapi/gotham-greens-oembed-api-openapi.yml
+  - type: Authentication
+    url: authentication/gotham-greens-authentication.yml
+  - type: ErrorCatalog
+    url: errors/gotham-greens-problem-types.yml
+  - type: Conventions
+    url: conventions/gotham-greens-conventions.yml
+  - type: Conformance
+    url: conformance/gotham-greens-conformance.yml
+  - type: Overlay
+    url: overlays/gotham-greens-oembed-api-overlay.yaml
+- aid: gotham-greens:gotham-greens-seo-api
+  name: Gotham Greens SEO Metadata API
+  description: >-
+    Public Yoast SEO head endpoint returning the rendered SEO/head metadata and its JSON-LD
+    schema graph for any gothamgreens.com URL.
+  humanURL: https://www.gothamgreens.com/wp-json/
+  baseURL: https://www.gothamgreens.com/wp-json
+  tags:
+  - SEO
+  - Metadata
+  properties:
+  - type: OpenAPI
+    url: openapi/gotham-greens-seo-api-openapi.yml
+  - type: Authentication
+    url: authentication/gotham-greens-authentication.yml
+  - type: ErrorCatalog
+    url: errors/gotham-greens-problem-types.yml
+  - type: Conventions
+    url: conventions/gotham-greens-conventions.yml
+  - type: Overlay
+    url: overlays/gotham-greens-seo-api-overlay.yaml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/gotham-greens-agentic-access.yml
+- type: DomainSecurity
+  url: security/gotham-greens-domain-security.yml
 - type: Website
-  url: https://forgeglobal.com/gotham-greens_stock/
+  url: https://www.gothamgreens.com/
+- type: About
+  url: https://www.gothamgreens.com/our-story/
+- type: Blog
+  url: https://www.gothamgreens.com/journal/
+- type: BlogRSS
+  url: https://www.gothamgreens.com/journal/feed/
+- type: Support
+  url: https://www.gothamgreens.com/faq/
+- type: Contact
+  url: https://www.gothamgreens.com/contact/
+- type: Careers
+  url: https://www.gothamgreens.com/careers/
+- type: Press
+  url: https://www.gothamgreens.com/recent-press/
+- type: TermsOfService
+  url: https://www.gothamgreens.com/terms-of-use/
+- type: PrivacyPolicy
+  url: https://www.gothamgreens.com/privacy-policy/
+- type: Instagram
+  url: https://www.instagram.com/GothamGreens/
+- type: Facebook
+  url: https://www.facebook.com/GothamGreens
+- type: Twitter
+  url: https://twitter.com/gothamgreens
+- type: LinkedIn
+  url: https://www.linkedin.com/company/gotham-greens-farms/
+- type: Authentication
+  url: authentication/gotham-greens-authentication.yml
+- type: ErrorCatalog
+  url: errors/gotham-greens-problem-types.yml
+- type: Conventions
+  url: conventions/gotham-greens-conventions.yml
+- type: DataModel
+  url: data-model/gotham-greens-data-model.yml
+- type: Conformance
+  url: conformance/gotham-greens-conformance.yml
+- type: Lifecycle
+  url: lifecycle/gotham-greens-lifecycle.yml
+- type: WellKnown
+  url: well-known/gotham-greens-well-known.yml
+- type: LLMsTxt
+  url: llms/gotham-greens-llms.txt
+- type: ToolCrosswalk
+  url: mcp/gotham-greens-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Examples
+  url: examples/gotham-greens-examples.yml
+x-enrichment:
+  date: '2026-08-01'
+  status: enriched
+  artifacts_added: 34
+  pass: local-v1

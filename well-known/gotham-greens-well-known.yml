@@ -1,0 +1,69 @@
+generated: '2026-08-01'
+method: probed
+source: live probes of /.well-known/ and root discovery paths on www.gothamgreens.com
+hosts:
+- host: https://www.gothamgreens.com
+  note: >-
+    Also the API host — the WordPress REST surface is served from the same origin at /wp-json/.
+    No api./developer./docs. subdomain exists (all NXDOMAIN), so there is no second host to probe.
+  documents:
+  - path: /.well-known/security.txt
+    spec: RFC 9116
+    status: 404
+  - path: /.well-known/openid-configuration
+    spec: OpenID Connect Discovery
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    spec: RFC 8414
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    spec: RFC 9728
+    status: 404
+  - path: /.well-known/api-catalog
+    spec: RFC 9727
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    spec: A2A 1.0.0
+    status: 404
+  - path: /.well-known/agent.json
+    spec: A2A pre-0.3 legacy
+    status: 404
+  - path: /llms.txt
+    status: 404
+  - path: /openapi.json
+    status: 404
+  - path: /openapi.yaml
+    status: 404
+  - path: /swagger.json
+    status: 404
+  - path: /api-docs
+    status: 404
+  - path: /graphql
+    status: 404
+  - path: /robots.txt
+    status: 200
+    file: gotham-greens-robots.txt
+  - path: /sitemap.xml
+    status: 200
+    note: >-
+      Redirects to the Yoast SEO sitemap index at /sitemap_index.xml, which enumerates the post,
+      page and taxonomy sitemaps. Declared in robots.txt.
+  - path: /wp-json/
+    status: 200
+    note: >-
+      The one real machine-readable discovery document on this host — the WordPress REST root
+      index, advertising 17 namespaces and 406 routes with per-route methods and argument schemas.
+      Described in openapi/gotham-greens-discovery-api-openapi.yml (getRootIndex).
+notes: >-
+  gothamgreens.com publishes no /.well-known/ discovery documents at all, and no A2A agent card at
+  either the canonical or the legacy path. Note the false-positive hazard on this host: the
+  WordPress 404 handler returns an HTML page for unknown /.well-known/* paths, so a naive probe
+  that only checks for a body would mis-read every one of these as a hit. Each 404 above is the
+  observed HTTP status, and every body was HTML, not JSON. The only discovery surface that exists
+  is the WordPress route index at /wp-json/.
+x-evidence:
+  fetched: '2026-08-01'
+  host: https://www.gothamgreens.com
+  probe_method: HTTP GET following redirects, status recorded from the final response

@@ -1,0 +1,99 @@
+generated: '2026-08-01'
+method: derived
+source: >-
+  live error responses observed against https://www.gothamgreens.com/wp-json/ (2026-08-01), plus
+  the 4xx responses declared in this repo's openapi/ specs
+format: wordpress-rest-error
+rfc9457: false
+notes: >-
+  The Gotham Greens content API does NOT use RFC 9457 problem+json. Errors are returned as
+  application/json using the WordPress core error envelope: a machine-readable `code`, a
+  human-readable `message`, and a `data` object that repeats the HTTP status and, for validation
+  failures, carries per-parameter `params` and `details`. Every entry below was observed live —
+  none are inferred from the WordPress source.
+envelope:
+  media_type: application/json
+  fields:
+    code: Machine-readable error slug, e.g. rest_post_invalid_id.
+    message: Human-readable message.
+    data.status: HTTP status code, repeated inside the body.
+    data.params: Map of parameter name to validation message (validation failures only).
+    data.details: Per-parameter detail objects with a nested code and message (validation failures only).
+  example:
+    code: rest_invalid_param
+    message: 'Invalid parameter(s): per_page'
+    data:
+      status: 400
+      params:
+        per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+problems:
+- code: rest_invalid_param
+  status: 400
+  title: Invalid parameter
+  detail: One or more query parameters failed the route's argument validation.
+  remediation: >-
+    Read data.params for the offending parameter and its constraint. per_page must be between 1
+    and 100; page must be a positive integer; order must be asc or desc.
+  observed: GET /wp/v2/posts?per_page=999
+  source_operation: openapi/gotham-greens-posts-api-openapi.yml#listPosts
+- code: rest_post_invalid_id
+  status: 404
+  title: Invalid post ID
+  detail: No published object exists with the requested numeric ID for this post type.
+  remediation: List the collection first and use an id returned there.
+  observed: GET /wp/v2/posts/99999999
+  source_operation: openapi/gotham-greens-posts-api-openapi.yml#getPost
+- code: rest_no_route
+  status: 404
+  title: No route matched
+  detail: No route was found matching the URL and request method.
+  remediation: >-
+    Fetch the route index at /wp-json/ (getRootIndex) and confirm the route pattern and method
+    are registered.
+  observed: GET /wp/v2/nonexistent
+  source_operation: openapi/gotham-greens-discovery-api-openapi.yml#getRootIndex
+- code: rest_forbidden
+  status: 401
+  title: Not allowed
+  detail: The route exists but the anonymous caller lacks the capability to read it.
+  remediation: >-
+    This route is administrative. There is no public credential for it — do not attempt to
+    authenticate against gothamgreens.com.
+  observed: GET /wp/v2/settings
+- code: rest_user_cannot_view
+  status: 401
+  title: Cannot list users
+  detail: The site does not expose its user directory anonymously.
+  remediation: >-
+    Post `author` fields return a numeric user ID only; the matching user record is not publicly
+    resolvable.
+  observed: GET /wp/v2/users
+- code: rest_cannot_view_themes
+  status: 401
+  title: Cannot view themes
+  detail: Theme metadata is not anonymously readable.
+  observed: GET /wp/v2/themes
+- code: rest_cannot_view_plugins
+  status: 401
+  title: Cannot manage plugins
+  detail: Plugin metadata is not anonymously readable.
+  observed: GET /wp/v2/plugins
+- code: rest_cannot_view
+  status: 401
+  title: Cannot view menus
+  detail: Navigation menu terms are not anonymously readable.
+  observed: GET /wp/v2/menus
+- code: rest_block_type_cannot_view
+  status: 401
+  title: Cannot manage block types
+  detail: The block type registry is not anonymously readable.
+  observed: GET /wp/v2/block-types
+- code: rest_cannot_read
+  status: 401
+  title: Cannot view revisions
+  detail: Post revision history is not anonymously readable.
+  observed: GET /wp/v2/posts/9709/revisions
+x-evidence:
+  fetched: '2026-08-01'
+  host: https://www.gothamgreens.com
+  method: every code above returned from a live anonymous request; no codes inferred

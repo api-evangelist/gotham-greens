@@ -1,0 +1,165 @@
+generated: '2026-08-01'
+method: derived
+source: >-
+  openapi/gotham-greens-*-openapi.yml plus the id-reference fields and _links relations observed
+  in live responses from https://www.gothamgreens.com/wp-json/ (2026-08-01)
+summary: >-
+  The entity graph behind the Gotham Greens content API. It is the stock WordPress content model
+  — no custom post types are registered on this site (verified against /wp/v2/types), so the
+  graph is Post / Page / MediaItem joined to Category and Tag terms. Relationships are expressed
+  as numeric id references in the object body and as HAL-style relations in `_links`; adding
+  `_embed=true` to a request inlines the referenced objects under `_embedded`.
+entities:
+- name: Post
+  description: >-
+    A Gotham Greens Journal article — recipes, seasonal produce guides and company news. 132
+    published at time of capture.
+  collection: /wp/v2/posts
+  identifier: id
+  id_type: integer
+  schema: openapi/gotham-greens-posts-api-openapi.yml#/components/schemas/Post
+  operations: [listPosts, getPost]
+- name: Page
+  description: >-
+    A static marketing or legal page — Our Story, Our Farms, Our Products, Find Us, FAQ, Careers,
+    Recent Press, Terms of Use, Privacy Policy.
+  collection: /wp/v2/pages
+  identifier: id
+  id_type: integer
+  schema: openapi/gotham-greens-pages-api-openapi.yml#/components/schemas/Page
+  operations: [listPages, getPage]
+- name: MediaItem
+  description: >-
+    A media library attachment — product photography, greenhouse imagery, recipe photos — with
+    its generated size variants under media_details.sizes.
+  collection: /wp/v2/media
+  identifier: id
+  id_type: integer
+  schema: openapi/gotham-greens-media-api-openapi.yml#/components/schemas/MediaItem
+  operations: [listMedia, getMediaItem]
+- name: Category
+  description: Hierarchical Journal classification, e.g. Recipes, For the Family, General.
+  collection: /wp/v2/categories
+  identifier: id
+  id_type: integer
+  schema: openapi/gotham-greens-taxonomy-api-openapi.yml#/components/schemas/Category
+  operations: [listCategories, getCategory]
+- name: Tag
+  description: Non-hierarchical Journal keyword, e.g. lemon-basil.
+  collection: /wp/v2/tags
+  identifier: id
+  id_type: integer
+  schema: openapi/gotham-greens-taxonomy-api-openapi.yml#/components/schemas/Tag
+  operations: [listTags, getTag]
+- name: SearchResult
+  description: >-
+    A projection, not a stored entity — a lightweight pointer (id, title, url, type, subtype)
+    back to a Post or Page.
+  collection: /wp/v2/search
+  identifier: id
+  id_type: integer
+  schema: openapi/gotham-greens-search-api-openapi.yml#/components/schemas/SearchResult
+  operations: [searchContent]
+- name: ContentType
+  description: >-
+    Registry entry describing a registered post type and its rest_base. Metadata, not content.
+  collection: /wp/v2/types
+  identifier: slug
+  id_type: string
+  schema: openapi/gotham-greens-discovery-api-openapi.yml#/components/schemas/ContentType
+  operations: [listTypes, getType]
+- name: Taxonomy
+  description: Registry entry describing a registered taxonomy and the types it applies to.
+  collection: /wp/v2/taxonomies
+  identifier: slug
+  id_type: string
+  schema: openapi/gotham-greens-discovery-api-openapi.yml#/components/schemas/Taxonomy
+  operations: [listTaxonomies, getTaxonomy]
+- name: User
+  description: >-
+    Referenced but NOT resolvable. Post.author and Page.author carry a numeric user ID, but
+    /wp/v2/users returns 401 rest_user_cannot_view anonymously, so the author entity is a dangling
+    reference on the public surface.
+  collection: /wp/v2/users
+  resolvable: false
+  identifier: id
+  id_type: integer
+relationships:
+- from: Post
+  to: Category
+  cardinality: has_many
+  via: categories
+  detail: Array of category term IDs. Observed live, e.g. [1, 8].
+  link_rel: wp:term
+- from: Post
+  to: Tag
+  cardinality: has_many
+  via: tags
+  detail: Array of tag term IDs; frequently empty on this site.
+  link_rel: wp:term
+- from: Post
+  to: MediaItem
+  cardinality: has_one
+  via: featured_media
+  detail: Media ID of the featured image, or 0 when unset.
+  link_rel: wp:featuredmedia
+- from: Post
+  to: User
+  cardinality: belongs_to
+  via: author
+  detail: Author user ID. Not anonymously resolvable — see the User entity note.
+  link_rel: author
+- from: Page
+  to: Page
+  cardinality: belongs_to
+  via: parent
+  detail: Parent page ID for nested pages, 0 for a top-level page. Makes Page self-hierarchical.
+- from: Page
+  to: MediaItem
+  cardinality: has_one
+  via: featured_media
+- from: Page
+  to: User
+  cardinality: belongs_to
+  via: author
+- from: Category
+  to: Category
+  cardinality: belongs_to
+  via: parent
+  detail: Categories are hierarchical; parent is 0 at the root.
+- from: MediaItem
+  to: Post
+  cardinality: belongs_to
+  via: post
+  detail: The post or page an attachment was uploaded to, null when unattached.
+- from: MediaItem
+  to: User
+  cardinality: belongs_to
+  via: author
+- from: SearchResult
+  to: Post
+  cardinality: has_one
+  via: id
+  detail: Resolves to a Post when subtype=post, or a Page when subtype=page.
+- from: ContentType
+  to: Taxonomy
+  cardinality: has_many
+  via: taxonomies
+  detail: Slugs of the taxonomies attached to a type; `post` carries category and post_tag.
+extensions:
+  acf:
+    present: true
+    detail: >-
+      Post, Page, MediaItem and Category objects carry an `acf` key from Advanced Custom Fields.
+      Its shape is site-configured and varies per object — it is typed as an open object/array in
+      the specs rather than guessed at, since the field registry is not exposed anonymously.
+  yoast_head_json:
+    present: true
+    detail: >-
+      Post, Page, Category and Tag objects carry a `yoast_head_json` object containing the
+      schema.org JSON-LD `@graph` for that object — an embedded second data model (Organization,
+      WebSite, WebPage, Article, BreadcrumbList) alongside the WordPress one.
+traversal_notes:
+- Use `_embed=true` to inline author, wp:term and wp:featuredmedia and avoid N+1 id lookups.
+- Use `_fields=id,slug,title,link,date,categories` to drop the large yoast_head string.
+- Author is a dead end anonymously; treat Post.author as an opaque integer.
