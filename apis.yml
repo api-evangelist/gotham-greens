@@ -256,6 +256,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: MCPServer
+  url: mcp/gotham-greens-mcp.yml
 - type: AgenticAccess
   url: agentic-access/gotham-greens-agentic-access.yml
 - type: DomainSecurity
