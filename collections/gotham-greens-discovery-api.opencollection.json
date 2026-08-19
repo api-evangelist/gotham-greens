@@ -1,0 +1,111 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Gotham Greens Discovery API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Discovery",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the API root index",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.gothamgreens.com/wp-json/"
+          },
+          "docs": "Returns the site's REST index — name, description, home and gmt_offset, the list of registered namespaces, the full route table with per-route methods and argument schemas, the authentication methods advertised, and site link relations."
+        },
+        {
+          "info": {
+            "name": "Get the wp/v2 namespace index",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.gothamgreens.com/wp-json/wp/v2"
+          },
+          "docs": "Returns the route table scoped to the `wp/v2` namespace."
+        },
+        {
+          "info": {
+            "name": "List registered content types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.gothamgreens.com/wp-json/wp/v2/types"
+          },
+          "docs": "Returns every registered post type keyed by slug. Verified live: post, page, attachment, nav_menu_item, wp_block, wp_template, wp_template_part, wp_global_styles, wp_navigation, wp_font_family, wp_font_face. Gotham Greens registers no custom public post types."
+        },
+        {
+          "info": {
+            "name": "Get a content type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.gothamgreens.com/wp-json/wp/v2/types/:type",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "Slug of the registered post type, e.g. `post`."
+              }
+            ]
+          },
+          "docs": "Returns a single registered post type by slug."
+        },
+        {
+          "info": {
+            "name": "List registered taxonomies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.gothamgreens.com/wp-json/wp/v2/taxonomies"
+          },
+          "docs": "Returns every registered taxonomy keyed by slug. Verified live: category, post_tag, nav_menu, wp_pattern_category."
+        },
+        {
+          "info": {
+            "name": "Get a taxonomy",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.gothamgreens.com/wp-json/wp/v2/taxonomies/:taxonomy",
+            "params": [
+              {
+                "name": "taxonomy",
+                "value": "",
+                "type": "path",
+                "description": "Slug of the taxonomy, e.g. `category`."
+              }
+            ]
+          },
+          "docs": "Returns a single registered taxonomy by slug."
+        },
+        {
+          "info": {
+            "name": "List post statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.gothamgreens.com/wp-json/wp/v2/statuses"
+          },
+          "docs": "Returns the publicly visible post statuses. Verified live: `publish` and `acf-disabled`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

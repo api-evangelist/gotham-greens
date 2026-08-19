@@ -1,0 +1,188 @@
+{
+  "item": [
+    {
+      "id": "b0df9a4f-241e-4279-80b2-89122cffe02d",
+      "name": "oEmbed",
+      "description": {
+        "content": "oEmbed 1.0 discovery for Gotham Greens site URLs.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a179f39e-d867-4623-8635-01c6f0586a9e",
+          "name": "Get oEmbed data for a site URL",
+          "request": {
+            "name": "Get oEmbed data for a site URL",
+            "description": {
+              "content": "Returns oEmbed 1.0 metadata for a gothamgreens.com URL. Non-Gotham-Greens URLs are rejected.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "oembed",
+                "1.0",
+                "embed"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "url",
+                  "value": "<uri>",
+                  "description": "(Required) The gothamgreens.com URL to retrieve embed information for."
+                },
+                {
+                  "disabled": false,
+                  "key": "format",
+                  "value": "json",
+                  "description": "The oEmbed response format."
+                },
+                {
+                  "disabled": false,
+                  "key": "maxwidth",
+                  "value": "600",
+                  "description": "Maximum width of the embed frame in pixels."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1ae2cf52-690f-48ee-9737-579630f34582",
+              "name": "oEmbed 1.0 response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oembed",
+                    "1.0",
+                    "embed"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "url",
+                      "value": "<uri>"
+                    },
+                    {
+                      "key": "format",
+                      "value": "json"
+                    },
+                    {
+                      "key": "maxwidth",
+                      "value": "600"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"version\": \"string\",\n  \"provider_name\": \"string\",\n  \"provider_url\": \"http://CjoUrzPPgsAyiFcE.yvjQe0FR,-Z8RIOek8L16Sv3cjHJ.jhzxUAhSM+obN3\",\n  \"type\": \"string\",\n  \"author_name\": \"string\",\n  \"author_url\": \"http://BXlEPGKvFuspegFaK.mtEnd6sqHFF6Xl6rzR30uH25IZxv1yJrkUw6tJ2I8eDPD6kZYtwzW4Y\",\n  \"title\": \"string\",\n  \"width\": 3291,\n  \"height\": 2735,\n  \"html\": \"string\",\n  \"thumbnail_url\": \"https://bMrqfeim.inZDwl2blRHMda6V2GiQDBPdp3MG6JKnaBqsz0bR1MoDcmeAgXxuVT-\",\n  \"thumbnail_width\": 7575,\n  \"thumbnail_height\": 4102\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "91e61944-1131-44dd-8a0c-bef1fad9edfd",
+              "name": "The requested object does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oembed",
+                    "1.0",
+                    "embed"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "url",
+                      "value": "<uri>"
+                    },
+                    {
+                      "key": "format",
+                      "value": "json"
+                    },
+                    {
+                      "key": "maxwidth",
+                      "value": "600"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"rest_no_route\",\n  \"message\": \"No route was found matching the URL and request method.\",\n  \"data\": {\n    \"status\": 404\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://www.gothamgreens.com/wp-json",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "04abee5e-ecb8-4977-8757-7473bb760c85",
+    "name": "Gotham Greens oEmbed API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Gotham Greens acts as an oEmbed provider for its own URLs through the WordPress core oEmbed controller. Given any gothamgreens.com post or page URL, the endpoint returns oEmbed 1.0 rich metadata — provider name, author, title, thumbnail and an embeddable iframe. Verified live with an anonymous probe returning HTTP 200 for https://www.gothamgreens.com/our-story/.\n\nContact Support:\n Name: Gotham Greens",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "item": [
+    {
+      "id": "44b0a2bb-f086-415e-a147-a597783588f4",
+      "name": "SEO",
+      "description": {
+        "content": "Rendered SEO head metadata and JSON-LD schema graph.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "179ec810-c242-4c3b-b39a-1a404bdfe1c9",
+          "name": "Get SEO head metadata for a URL",
+          "request": {
+            "name": "Get SEO head metadata for a URL",
+            "description": {
+              "content": "Returns the Yoast-rendered SEO head for a gothamgreens.com URL — meta description, canonical, Open Graph and Twitter card tags, and the schema.org JSON-LD graph.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "yoast",
+                "v1",
+                "get_head"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "url",
+                  "value": "<uri>",
+                  "description": "(Required) The gothamgreens.com URL to retrieve SEO metadata for."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8dee5314-b74f-45f4-8b2c-148e78f0d431",
+              "name": "The rendered SEO head.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "yoast",
+                    "v1",
+                    "get_head"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "url",
+                      "value": "<uri>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"html\": \"string\",\n  \"json\": {\n    \"key_0\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "34451306-c7b1-432c-b767-b6f89d0b4aff",
+              "name": "The requested object does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "yoast",
+                    "v1",
+                    "get_head"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "url",
+                      "value": "<uri>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"rest_no_route\",\n  \"message\": \"No route was found matching the URL and request method.\",\n  \"data\": {\n    \"status\": 404\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://www.gothamgreens.com/wp-json",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "80b2515c-d980-4050-92d2-babf61a22be1",
+    "name": "Gotham Greens SEO Metadata API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Yoast SEO REST head endpoint, exposed anonymously on gothamgreens.com. Given any site URL it returns the rendered `<head>` SEO block as HTML plus the structured metadata behind it, including the schema.org JSON-LD graph (Organization, WebSite, WebPage, BreadcrumbList) the site publishes. Verified live on 2026-08-01 (Yoast SEO Premium v28.1). This is a plugin surface, not a Gotham Greens product API.\n\nContact Support:\n Name: Gotham Greens",
+      "type": "text/plain"
+    }
+  }
+}

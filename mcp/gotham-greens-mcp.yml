@@ -2,14 +2,12 @@ generated: '2026-08-01'
 method: derived
 status: candidate
 source: openapi/gotham-greens-*-openapi.yml
-summary: >-
-  Gotham Greens publishes NO hosted or remote MCP server. Searched the site, the /.well-known/
-  surface and the public registries on 2026-08-01 and found none; there is no mcp.gothamgreens.com
-  host and no MCP reference anywhere in the site. The tool list below is a CANDIDATE derived
-  mechanically from the twenty anonymously-readable OpenAPI operations in this repo — one tool per
-  operationId. It is a proposal for what an MCP server over this surface would expose, not
-  something Gotham Greens offers. Each tool's real input contract is the parameters block of its
-  backing operation in the referenced spec.
+summary: Gotham Greens publishes NO hosted or remote MCP server. Searched the site, the /.well-known/
+  surface and the public registries on 2026-08-01 and found none; there is no mcp.gothamgreens.com host
+  and no MCP reference anywhere in the site. The tool list below is a CANDIDATE derived mechanically from
+  the twenty anonymously-readable OpenAPI operations in this repo — one tool per operationId. It is a
+  proposal for what an MCP server over this surface would expose, not something Gotham Greens offers.
+  Each tool's real input contract is the parameters block of its backing operation in the referenced spec.
 search:
   performed: '2026-08-01'
   probed:
@@ -27,9 +25,8 @@ server:
   transport: http
   url: null
   published: false
-  note: >-
-    No server URL — nothing is published. A candidate server would front
-    https://www.gothamgreens.com/wp-json with no credential, since the surface is anonymous.
+  note: No server URL — nothing is published. A candidate server would front https://www.gothamgreens.com/wp-json
+    with no credential, since the surface is anonymous.
 auth:
   required: false
   note: All candidate tools are anonymous reads. No token, key or consent step is involved.
@@ -94,3 +91,9 @@ tools:
 - name: get_seo_head
   description: Get the Yoast SEO head metadata and JSON-LD schema graph for a gothamgreens.com URL.
   source_operation: openapi/gotham-greens-seo-api-openapi.yml#getSeoHead
+deployment:
+  mode: none
+  verified: derived
+  tools: 20
+  checked: '2026-08-12'
+  source: catalog MCP census

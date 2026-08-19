@@ -1,0 +1,49 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Gotham Greens oEmbed API",
+    "version": "oembed/1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "oEmbed",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get oEmbed data for a site URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.gothamgreens.com/wp-json/oembed/1.0/embed",
+            "params": [
+              {
+                "name": "url",
+                "value": "",
+                "type": "query",
+                "description": "The gothamgreens.com URL to retrieve embed information for."
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "The oEmbed response format."
+              },
+              {
+                "name": "maxwidth",
+                "value": "",
+                "type": "query",
+                "description": "Maximum width of the embed frame in pixels."
+              }
+            ]
+          },
+          "docs": "Returns oEmbed 1.0 metadata for a gothamgreens.com URL. Non-Gotham-Greens URLs are rejected."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
