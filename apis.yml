@@ -14,6 +14,18 @@ description: >-
   the WordPress REST content API behind its corporate website at gothamgreens.com, captured here
   for discovery purposes.
 url: https://raw.githubusercontent.com/api-evangelist/gotham-greens/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://www.gothamgreens.com/wp-content/uploads/2019/10/android-chrome-256x256-200x200.png
 accessModel:
   pricing: none
