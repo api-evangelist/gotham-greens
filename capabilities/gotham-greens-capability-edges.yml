@@ -1,0 +1,26 @@
+slug: gotham-greens
+provider: Gotham Greens
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Agriculture & Food Production
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Posts
+  spec_file: gotham-greens-posts-api-openapi.yml
+  capability_id: BC-400.70
+  capability_id_l1: BC-400
+  capability_name: Content Marketing Management
+  confidence: 0.7
+  evidence: covers the `post` type, which backs the Gotham Greens Journal — recipes, seasonal produce
+    guides and company news
+  reason: Editorial content (recipes, guides, news) published and distributed via the corporate site —
+    content marketing content production/distribution. Not an agriculture operations surface despite the
+    vendor being a grower.
