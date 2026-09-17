@@ -62,8 +62,8 @@ apis:
 - aid: gotham-greens:gotham-greens-posts-api
   name: Gotham Greens Journal Posts API
   description: >-
-    Public, unauthenticated read access to the Gotham Greens Journal — recipes, company news and
-    seasonal articles — via the WordPress core REST API. Verified live at 132 published posts.
+    Public, unauthenticated read access to the Gotham Greens Journal — recipes, company news and seasonal
+    articles — via the WordPress core REST API. Verified live at 132 published posts.
   humanURL: https://www.gothamgreens.com/wp-json/
   baseURL: https://www.gothamgreens.com/wp-json
   tags:
@@ -90,8 +90,8 @@ apis:
 - aid: gotham-greens:gotham-greens-pages-api
   name: Gotham Greens Pages API
   description: >-
-    Public, unauthenticated read access to the static marketing pages of gothamgreens.com (Our
-    Story, Our Farms, Our Products, Find Us, FAQ, Careers) via the WordPress core REST API.
+    Public, unauthenticated read access to the static marketing pages of gothamgreens.com (Our Story,
+    Our Farms, Our Products, Find Us, FAQ, Careers) via the WordPress core REST API.
   humanURL: https://www.gothamgreens.com/wp-json/
   baseURL: https://www.gothamgreens.com/wp-json
   tags:
@@ -117,8 +117,8 @@ apis:
 - aid: gotham-greens:gotham-greens-media-api
   name: Gotham Greens Media API
   description: >-
-    Public, unauthenticated read access to the media library behind gothamgreens.com — product
-    photography, farm imagery and recipe images with their generated size variants.
+    Public, unauthenticated read access to the media library behind gothamgreens.com — product photography,
+    farm imagery and recipe images with their generated size variants.
   humanURL: https://www.gothamgreens.com/wp-json/
   baseURL: https://www.gothamgreens.com/wp-json
   tags:
@@ -144,8 +144,8 @@ apis:
 - aid: gotham-greens:gotham-greens-taxonomy-api
   name: Gotham Greens Taxonomy API
   description: >-
-    Public, unauthenticated read access to the Journal taxonomy — categories (Recipes, For the
-    Family, General) and tags — via the WordPress core REST API.
+    Public, unauthenticated read access to the Journal taxonomy — categories (Recipes, For the Family,
+    General) and tags — via the WordPress core REST API.
   humanURL: https://www.gothamgreens.com/wp-json/
   baseURL: https://www.gothamgreens.com/wp-json
   tags:
@@ -171,8 +171,8 @@ apis:
 - aid: gotham-greens:gotham-greens-search-api
   name: Gotham Greens Search API
   description: >-
-    Public, unauthenticated cross-content search over posts and pages on gothamgreens.com,
-    returning lightweight id / title / url / subtype records.
+    Public, unauthenticated cross-content search over posts and pages on gothamgreens.com, returning lightweight
+    id / title / url / subtype records.
   humanURL: https://www.gothamgreens.com/wp-json/
   baseURL: https://www.gothamgreens.com/wp-json
   tags:
@@ -196,8 +196,8 @@ apis:
 - aid: gotham-greens:gotham-greens-discovery-api
   name: Gotham Greens Discovery API
   description: >-
-    Public, unauthenticated site, content-type, taxonomy and status metadata — the self-describing
-    route index that makes the whole surface machine-readable.
+    Public, unauthenticated site, content-type, taxonomy and status metadata — the self-describing route
+    index that makes the whole surface machine-readable.
   humanURL: https://www.gothamgreens.com/wp-json/
   baseURL: https://www.gothamgreens.com/wp-json
   tags:
@@ -218,34 +218,11 @@ apis:
     url: lifecycle/gotham-greens-lifecycle.yml
   - type: Overlay
     url: overlays/gotham-greens-discovery-api-overlay.yaml
-- aid: gotham-greens:gotham-greens-oembed-api
-  name: Gotham Greens oEmbed API
-  description: >-
-    Public oEmbed 1.0 provider endpoint for gothamgreens.com URLs, returning embeddable rich
-    metadata for Journal posts and site pages.
-  humanURL: https://www.gothamgreens.com/wp-json/
-  baseURL: https://www.gothamgreens.com/wp-json
-  tags:
-  - oEmbed
-  - Metadata
-  properties:
-  - type: OpenAPI
-    url: openapi/gotham-greens-oembed-api-openapi.yml
-  - type: Authentication
-    url: authentication/gotham-greens-authentication.yml
-  - type: ErrorCatalog
-    url: errors/gotham-greens-problem-types.yml
-  - type: Conventions
-    url: conventions/gotham-greens-conventions.yml
-  - type: Conformance
-    url: conformance/gotham-greens-conformance.yml
-  - type: Overlay
-    url: overlays/gotham-greens-oembed-api-overlay.yaml
 - aid: gotham-greens:gotham-greens-seo-api
   name: Gotham Greens SEO Metadata API
   description: >-
-    Public Yoast SEO head endpoint returning the rendered SEO/head metadata and its JSON-LD
-    schema graph for any gothamgreens.com URL.
+    Public Yoast SEO head endpoint returning the rendered SEO/head metadata and its JSON-LD schema graph
+    for any gothamgreens.com URL.
   humanURL: https://www.gothamgreens.com/wp-json/
   baseURL: https://www.gothamgreens.com/wp-json
   tags:
@@ -262,12 +239,32 @@ apis:
     url: conventions/gotham-greens-conventions.yml
   - type: Overlay
     url: overlays/gotham-greens-seo-api-overlay.yaml
+- aid: gotham-greens:gotham-greens-o-embed-api
+  name: Gotham Greens o Embed API
+  description: oEmbed 1.0 discovery for Gotham Greens site URLs.
+  humanURL: https://www.gothamgreens.com/wp-json/
+  baseURL: https://www.gothamgreens.com/wp-json
+  tags:
+  - o Embed
+  properties:
+  - type: OpenAPI
+    url: openapi/gotham-greens-o-embed-api-openapi.yml
+  - type: Authentication
+    url: authentication/gotham-greens-authentication.yml
+  - type: ErrorCatalog
+    url: errors/gotham-greens-problem-types.yml
+  - type: Conventions
+    url: conventions/gotham-greens-conventions.yml
+  - type: Conformance
+    url: conformance/gotham-greens-conformance.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/gotham-greens-oembed-api-overlay.yaml
 - type: CapabilityMap
   url: capabilities/gotham-greens-capability-edges.yml
   name: Gotham Greens Business Capability Map
