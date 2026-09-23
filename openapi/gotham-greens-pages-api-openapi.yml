@@ -1,14 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Gotham Greens Pages API
   version: wp/v2
   summary: Public read surface of the static marketing pages on gothamgreens.com.
-  description: >-
-    The `page` type behind gothamgreens.com — Our Story, Our Farms, Our Products, Find Us, FAQ,
-    Careers, Recent Press, Terms of Use and Privacy Policy — exposed anonymously through the
-    WordPress core REST API. Derived from the live route index and verified with anonymous
-    probes returning HTTP 200. Write operations on these routes require authentication and are
-    not documented here.
+  description: The `page` type behind gothamgreens.com — Our Story, Our Farms, Our Products, Find Us, FAQ, Careers, Recent Press, Terms of Use and Privacy Policy — exposed anonymously through the WordPress core REST API. Derived from the live route index and verified with anonymous probes returning HTTP 200. Write operations on these routes require authentication and are not documented here.
   contact:
     name: Gotham Greens
     url: https://www.gothamgreens.com/contact/
@@ -19,10 +14,7 @@ info:
     method: derived
     source: https://www.gothamgreens.com/wp-json/
     derived_on: '2026-08-01'
-    note: >-
-      Routes enumerated from the live wp-json discovery document (406 routes across 17
-      namespaces); each operation below was probed anonymously and returned HTTP 200. Schemas
-      reflect the fields observed in live responses on 2026-08-01. No fabricated operations.
+    note: Routes enumerated from the live wp-json discovery document (406 routes across 17 namespaces); each operation below was probed anonymously and returned HTTP 200. Schemas reflect the fields observed in live responses on 2026-08-01. No fabricated operations.
 servers:
 - url: https://www.gothamgreens.com/wp-json
   description: Production
@@ -36,9 +28,7 @@ paths:
       - Pages
       operationId: listPages
       summary: List site pages
-      description: >-
-        Returns a paginated collection of published pages. Total item and page counts come back
-        in the X-WP-Total and X-WP-TotalPages headers.
+      description: Returns a paginated collection of published pages. Total item and page counts come back in the X-WP-Total and X-WP-TotalPages headers.
       parameters:
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/perPage'
@@ -104,6 +94,16 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   parameters:
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in the response. Only `view` and `embed` are available anonymously.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
     id:
       name: id
       in: path
@@ -111,25 +111,6 @@ components:
       description: Unique numeric identifier for the object.
       schema:
         type: integer
-    page:
-      name: page
-      in: query
-      description: Current page of the collection. Defaults to 1.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    perPage:
-      name: per_page
-      in: query
-      description: >-
-        Maximum number of items to be returned in the result set. Verified live: values outside
-        1-100 return HTTP 400 `rest_invalid_param`.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 10
     search:
       name: search
       in: query
@@ -142,74 +123,32 @@ components:
       description: Order sort attribute ascending or descending.
       schema:
         type: string
-        enum: [asc, desc]
+        enum:
+        - asc
+        - desc
+    perPage:
+      name: per_page
+      in: query
+      description: 'Maximum number of items to be returned in the result set. Verified live: values outside 1-100 return HTTP 400 `rest_invalid_param`.'
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
     orderby:
       name: orderby
       in: query
       description: Sort collection by object attribute.
       schema:
         type: string
-    context:
-      name: context
+    page:
+      name: page
       in: query
-      description: >-
-        Scope under which the request is made; determines fields present in the response. Only
-        `view` and `embed` are available anonymously.
-      schema:
-        type: string
-        enum: [view, embed]
-        default: view
-  headers:
-    XWPTotal:
-      description: Total number of items in the collection.
+      description: Current page of the collection. Defaults to 1.
       schema:
         type: integer
-    XWPTotalPages:
-      description: Total number of pages in the collection at the current per_page.
-      schema:
-        type: integer
-    LinkPagination:
-      description: RFC 8288 Link header carrying `next` and `prev` pagination relations.
-      schema:
-        type: string
-  responses:
-    NotFound:
-      description: The requested object does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: rest_no_route
-            message: No route was found matching the URL and request method.
-            data:
-              status: 404
-    InvalidParam:
-      description: One or more query parameters failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: rest_invalid_param
-            message: 'Invalid parameter(s): per_page'
-            data:
-              status: 400
-              params:
-                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
-    Unauthorized:
-      description: >-
-        The route exists but is not readable anonymously. Verified live on the users, settings,
-        themes, plugins, menus, block-types and revisions routes.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: rest_forbidden
-            message: Sorry, you are not allowed to do that.
-            data:
-              status: 401
+        minimum: 1
+        default: 1
   schemas:
     RenderedText:
       type: object
@@ -217,31 +156,8 @@ components:
       properties:
         rendered:
           type: string
-      required: [rendered]
-    Error:
-      type: object
-      description: >-
-        The WordPress REST error envelope, verified live. Note this is NOT RFC 9457
-        application/problem+json — it is served as application/json with a WordPress-specific shape.
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-            params:
-              type: object
-              additionalProperties:
-                type: string
-            details:
-              type: object
-              additionalProperties: true
-          required: [status]
-      required: [code, message, data]
+      required:
+      - rendered
     Page:
       type: object
       description: A WordPress page as returned anonymously in `view` context.
@@ -324,4 +240,74 @@ components:
         _links:
           type: object
           additionalProperties: true
-      required: [id, slug, type, link, title, content]
+      required:
+      - id
+      - slug
+      - type
+      - link
+      - title
+      - content
+    Error:
+      type: object
+      description: The WordPress REST error envelope, verified live. Note this is NOT RFC 9457 application/problem+json — it is served as application/json with a WordPress-specific shape.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              additionalProperties: true
+          required:
+          - status
+      required:
+      - code
+      - message
+      - data
+  headers:
+    XWPTotalPages:
+      description: Total number of pages in the collection at the current per_page.
+      schema:
+        type: integer
+    XWPTotal:
+      description: Total number of items in the collection.
+      schema:
+        type: integer
+    LinkPagination:
+      description: RFC 8288 Link header carrying `next` and `prev` pagination relations.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested object does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_no_route
+            message: No route was found matching the URL and request method.
+            data:
+              status: 404
+    InvalidParam:
+      description: One or more query parameters failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)

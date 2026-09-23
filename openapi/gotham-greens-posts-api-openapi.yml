@@ -1,21 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Gotham Greens Journal Posts API
   version: wp/v2
   summary: Public read surface of the Gotham Greens Journal (blog) content API.
-  description: >-
-    Gotham Greens publishes its corporate website (gothamgreens.com) on WordPress with the core
-    WordPress REST API enabled and anonymously readable. This specification was DERIVED by
-    discovering the live route index at https://www.gothamgreens.com/wp-json/ (406 routes across
-    17 namespaces) and probing each route for anonymous access; only routes verified to return
-    HTTP 200 without credentials are documented here as public operations. This document covers
-    the `post` type, which backs the Gotham Greens Journal — recipes, seasonal produce guides and
-    company news. At time of capture the collection held 132 published posts (observed in the
-    X-WP-Total response header). Write operations exist on the same routes but require
-    authentication (WordPress cookie + X-WP-Nonce, or Application Passwords) and are not
-    documented here; anonymous requests to them return HTTP 401. This is not a product API offered
-    by Gotham Greens to customers — it is the content API of their marketing site, captured for
-    discovery purposes.
+  description: Gotham Greens publishes its corporate website (gothamgreens.com) on WordPress with the core WordPress REST API enabled and anonymously readable.
   contact:
     name: Gotham Greens
     url: https://www.gothamgreens.com/contact/
@@ -26,11 +14,7 @@ info:
     method: derived
     source: https://www.gothamgreens.com/wp-json/
     derived_on: '2026-08-01'
-    note: >-
-      Routes enumerated from the live wp-json discovery document; each operation below was probed
-      anonymously and returned HTTP 200. Schemas reflect the fields observed in live responses on
-      2026-08-01, including the `acf` (Advanced Custom Fields) and `yoast_head_json` extensions
-      this site adds. No fabricated operations or parameters.
+    note: Routes enumerated from the live wp-json discovery document; each operation below was probed anonymously and returned HTTP 200. Schemas reflect the fields observed in live responses on 2026-08-01, including the `acf` (Advanced Custom Fields) and `yoast_head_json` extensions this site adds. No fabricated operations or parameters.
 servers:
 - url: https://www.gothamgreens.com/wp-json
   description: Production
@@ -44,10 +28,7 @@ paths:
       - Posts
       operationId: listPosts
       summary: List Journal posts
-      description: >-
-        Returns a paginated collection of published Journal posts. Total item and page counts are
-        returned in the X-WP-Total and X-WP-TotalPages response headers, and RFC 8288 `Link`
-        headers carry `next` / `prev` relations.
+      description: Returns a paginated collection of published Journal posts. Total item and page counts are returned in the X-WP-Total and X-WP-TotalPages response headers, and RFC 8288 `Link` headers carry `next` / `prev` relations.
       parameters:
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/perPage'
@@ -143,6 +124,16 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   parameters:
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in the response. Only `view` and `embed` are available anonymously.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
     id:
       name: id
       in: path
@@ -150,25 +141,6 @@ components:
       description: Unique numeric identifier for the object.
       schema:
         type: integer
-    page:
-      name: page
-      in: query
-      description: Current page of the collection. Defaults to 1.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    perPage:
-      name: per_page
-      in: query
-      description: >-
-        Maximum number of items to be returned in the result set. Verified live: values outside
-        1-100 return HTTP 400 `rest_invalid_param`.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 10
     search:
       name: search
       in: query
@@ -181,67 +153,45 @@ components:
       description: Order sort attribute ascending or descending.
       schema:
         type: string
-        enum: [asc, desc]
+        enum:
+        - asc
+        - desc
         default: desc
+    perPage:
+      name: per_page
+      in: query
+      description: 'Maximum number of items to be returned in the result set. Verified live: values outside 1-100 return HTTP 400 `rest_invalid_param`.'
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
     orderby:
       name: orderby
       in: query
       description: Sort collection by object attribute.
       schema:
         type: string
-        enum: [author, date, id, include, modified, parent, relevance, slug, include_slugs, title]
+        enum:
+        - author
+        - date
+        - id
+        - include
+        - modified
+        - parent
+        - relevance
+        - slug
+        - include_slugs
+        - title
         default: date
-    context:
-      name: context
+    page:
+      name: page
       in: query
-      description: >-
-        Scope under which the request is made; determines fields present in the response. Only
-        `view` and `embed` are available anonymously.
-      schema:
-        type: string
-        enum: [view, embed]
-        default: view
-  headers:
-    XWPTotal:
-      description: Total number of items in the collection.
+      description: Current page of the collection. Defaults to 1.
       schema:
         type: integer
-      example: 132
-    XWPTotalPages:
-      description: Total number of pages in the collection at the current per_page.
-      schema:
-        type: integer
-      example: 66
-    LinkPagination:
-      description: RFC 8288 Link header carrying `next` and `prev` pagination relations.
-      schema:
-        type: string
-      example: <https://www.gothamgreens.com/wp-json/wp/v2/posts?per_page=2&page=2>; rel="next"
-  responses:
-    NotFound:
-      description: The requested object does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: rest_post_invalid_id
-            message: Invalid post ID.
-            data:
-              status: 404
-    InvalidParam:
-      description: One or more query parameters failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: rest_invalid_param
-            message: 'Invalid parameter(s): per_page'
-            data:
-              status: 400
-              params:
-                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+        minimum: 1
+        default: 1
   schemas:
     RenderedText:
       type: object
@@ -250,12 +200,11 @@ components:
         rendered:
           type: string
           description: HTML-rendered value.
-      required: [rendered]
+      required:
+      - rendered
     Post:
       type: object
-      description: >-
-        A Gotham Greens Journal post as returned anonymously in `view` context. Field set observed
-        live on 2026-08-01.
+      description: A Gotham Greens Journal post as returned anonymously in `view` context. Field set observed live on 2026-08-01.
       properties:
         id:
           type: integer
@@ -309,10 +258,14 @@ components:
           description: Media (attachment) ID of the featured image, or 0 when unset.
         comment_status:
           type: string
-          enum: [open, closed]
+          enum:
+          - open
+          - closed
         ping_status:
           type: string
-          enum: [open, closed]
+          enum:
+          - open
+          - closed
         sticky:
           type: boolean
         template:
@@ -351,12 +304,19 @@ components:
           type: object
           additionalProperties: true
           description: HAL-style link relations (self, collection, author, wp:term, wp:attachment, replies).
-      required: [id, date, slug, type, link, title, content, categories, tags]
+      required:
+      - id
+      - date
+      - slug
+      - type
+      - link
+      - title
+      - content
+      - categories
+      - tags
     Error:
       type: object
-      description: >-
-        The WordPress REST error envelope, verified live. Note this is NOT RFC 9457
-        application/problem+json — it is served as application/json with a WordPress-specific shape.
+      description: The WordPress REST error envelope, verified live. Note this is NOT RFC 9457 application/problem+json — it is served as application/json with a WordPress-specific shape.
       properties:
         code:
           type: string
@@ -377,5 +337,50 @@ components:
             details:
               type: object
               additionalProperties: true
-          required: [status]
-      required: [code, message, data]
+          required:
+          - status
+      required:
+      - code
+      - message
+      - data
+  headers:
+    XWPTotalPages:
+      description: Total number of pages in the collection at the current per_page.
+      schema:
+        type: integer
+      example: 66
+    XWPTotal:
+      description: Total number of items in the collection.
+      schema:
+        type: integer
+      example: 132
+    LinkPagination:
+      description: RFC 8288 Link header carrying `next` and `prev` pagination relations.
+      schema:
+        type: string
+      example: <https://www.gothamgreens.com/wp-json/wp/v2/posts?per_page=2&page=2>; rel="next"
+  responses:
+    NotFound:
+      description: The requested object does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_post_invalid_id
+            message: Invalid post ID.
+            data:
+              status: 404
+    InvalidParam:
+      description: One or more query parameters failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
