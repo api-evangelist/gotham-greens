@@ -64,49 +64,113 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Gotham Greens is an American fresh food and indoor farming company, founded in 2009 by Viraj Puri
-and Eric Haley in Brooklyn, New York, where it built one of the first commercial-scale rooftop
-hydroponic greenhouses in the world. It operates a national network of climate-controlled
-hydroponic greenhouses across the United States, growing pesticide-free leafy greens, lettuces and
-herbs year-round, and sells packaged salad greens, salad kits, herbs, dressings, dips, pestos and
-cooking sauces under its own brand.
+Gotham Greens is an American fresh food and indoor farming company founded in 2009 by Viraj Puri and Eric Haley in Brooklyn, New York, where it built one of the first commercial-scale rooftop hydroponic greenhouses in the world. The company owns and operates a national network of climate-controlled hydroponic greenhouses across the United States, growing pesticide-free leafy greens, lettuces and herbs year-round using a fraction of the land and water of conventional field agriculture, and delivering them to retail, restaurant and foodservice customers within hours of harvest. Under its own brand it sells packaged salad greens, salad kits, fresh herbs, salad dressings, dips, pestos and cooking sauces. Gotham Greens is a consumer packaged goods and controlled-environment agriculture business rather than a software vendor, and publishes no commercial or developer-facing product API. The only machine-readable interface it exposes is the WordPress REST content API behind its corporate website at gothamgreens.com, captured here for discovery purposes.
 
-- https://www.gothamgreens.com/
-- Secondary-market listing: https://forgeglobal.com/gotham-greens_stock/
+**Areas:** Company · Agriculture · Controlled Environment Agriculture · Hydroponics · Food · Consumer Packaged Goods · Fresh Produce · Sustainability · Urban Farming
 
-## API surface
+## Gotham Greens on APIs.io
 
-Gotham Greens is a CPG and controlled-environment agriculture business, not a software vendor. It
-publishes **no developer program**: no API documentation, no SDKs, no CLI, no sandbox, no MCP
-server, no A2A agent card, no webhooks or events, and no `/.well-known/` documents. There is no
-`api.`, `developer.` or `docs.` subdomain (all NXDOMAIN).
+Everything profiled for Gotham Greens is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/gotham-greens/](https://apis.io/providers/gotham-greens/)** — or go straight to one of the APIs or properties below.
 
-What it *does* expose is the platform-provided **WordPress REST API** at
-`https://www.gothamgreens.com/wp-json`, whose read half is fully public. The live route index
-advertises 406 routes across 17 namespaces; 20 operations were verified to return HTTP 200 to an
-anonymous request and are documented here across eight derived OpenAPI 3.1 specifications:
+### APIs (1)
 
-| API | Operations |
+- [Gotham Greens Website (WordPress REST)](https://apis.io/apis/gotham-greens/gothamgreens-com-website-wordpress-rest/) — The public WordPress REST API (wp-json) of the Gotham Greens website at www.gothamgreens.com: the route index of the site's content management system,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [gotham-greens](https://apis.io/servers/gotham-greens/gotham-greens/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Gotham Greens Agentic Access](https://apis.io/agentic-access/gotham-greens/gotham-greens-agentic-access/)
+
+#### Collections (8)
+
+Postman and Open Collection request collections.
+
+- [Moved to /providers/gotham-greens/](https://apis.io/collections/gotham-greens/open-gotham-greens-discovery-api/)
+- [Moved to /providers/gotham-greens/](https://apis.io/collections/gotham-greens/open-gotham-greens-media-api/)
+- [Moved to /providers/gotham-greens/](https://apis.io/collections/gotham-greens/open-gotham-greens-oembed-api/)
+- [Moved to /providers/gotham-greens/](https://apis.io/collections/gotham-greens/open-gotham-greens-pages-api/)
+- [Moved to /providers/gotham-greens/](https://apis.io/collections/gotham-greens/open-gotham-greens-posts-api/)
+- [Moved to /providers/gotham-greens/](https://apis.io/collections/gotham-greens/open-gotham-greens-search-api/)
+- [Moved to /providers/gotham-greens/](https://apis.io/collections/gotham-greens/open-gotham-greens-seo-api/)
+- [Moved to /providers/gotham-greens/](https://apis.io/collections/gotham-greens/open-gotham-greens-taxonomy-api/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Gotham Greens Authentication](https://apis.io/security/gotham-greens/gotham-greens-authentication/)
+- [Gotham Greens Domain Security](https://apis.io/security/gotham-greens/gotham-greens-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.gothamgreens.com/)
+- [Support](https://www.gothamgreens.com/faq/)
+- [Blog](https://www.gothamgreens.com/journal/)
+- [Terms of service](https://www.gothamgreens.com/terms-of-use/)
+- [Privacy policy](https://www.gothamgreens.com/privacy-policy/)
+
+## API Evangelist rating
+
+**Kin Score 19.7** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
 |---|---|
-| Journal Posts | `listPosts`, `getPost` |
-| Pages | `listPages`, `getPage` |
-| Media | `listMedia`, `getMediaItem` |
-| Taxonomy | `listCategories`, `getCategory`, `listTags`, `getTag` |
-| Search | `searchContent` |
-| Discovery | `getRootIndex`, `getNamespaceIndex`, `listTypes`, `getType`, `listTaxonomies`, `getTaxonomy`, `listStatuses` |
-| oEmbed | `getOembed` |
-| SEO Metadata | `getSeoHead` |
+| Discoverability | 58.0 |
+| Contract quality | 6.5 |
+| Contract governance | 4.5 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 30.4 |
+| Access clarity | 21.1 |
 
-Administrative routes (`users`, `settings`, `themes`, `plugins`, `menus`, `block-types`,
-revisions) return 401 anonymously and are deliberately excluded — see
-`authentication/gotham-greens-authentication.yml` for the verified public/private split.
+**Agent readiness 7.2** — agent-aware
 
-**The specifications in `openapi/` were derived by API Evangelist from the live route index, not
-published by Gotham Greens.** This is an incidental CMS surface with no versioning policy, no
-deprecation policy, no SLA, no status page and no support channel for API consumers.
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
 
-## Artifacts
+**Regulatory alignment 24.5** — Horizontal (data, software, accessibility, platform)
 
-`openapi/` · `overlays/` · `authentication/` · `conventions/` · `errors/` · `data-model/` ·
-`conformance/` · `lifecycle/` · `examples/` · `well-known/` · `security/` · `llms/` · `mcp/`
-(candidate) · `skills/` · `agentic-access/`
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/gotham-greens/](https://apis.io/providers/gotham-greens/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Gotham Greens: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/gotham-greens/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
